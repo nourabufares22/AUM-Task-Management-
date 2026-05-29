@@ -1,7 +1,7 @@
 <footer class="mt-auto py-3">
     <div class="container text-center">
         <small class="text-muted">
-            &copy; <?= date('Y') ?> Arab Open University — Maintenance Request System
+            &copy; <?= date('Y') ?> American University of Madaba — Maintenance Request System
         </small>
     </div>
 </footer>

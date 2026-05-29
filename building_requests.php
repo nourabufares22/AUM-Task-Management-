@@ -7,10 +7,12 @@ $buildings = [
     'building_images/BA bulding.jpeg'                  => 'BA Building',
     'building_images/BB Building.jpeg'                 => 'BB Building',
     'building_images/STC Building.jpeg'                => 'STC Building',
+    'building_images/ITC Bulding.jpeg'                 => 'ITC Building',
+    'building_images/SA Bulding.jpeg'                  => 'SA Building',
+    'building_images/SB Building.jpeg'                 => 'SB Building',
     'building_images/Sports Bulding.jpeg'              => 'Sports Complex',
-    'building_images/Classroom.jpeg'                   => 'Classrooms Block',
-    'building_images/compuer lab.jpeg'                 => 'Computer Lab',
-    'building_images/campus inside of a building .jpeg' => 'Main Campus Hall',
+    'building_images/Classroom.jpeg'                   => 'Classrooms ',
+    'building_images/compuer lab.jpeg'                 => 'Computer Labs',
     'building_images/Campus outdoors.jpeg'             => 'Campus Grounds',
 ];
 ?>
