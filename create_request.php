@@ -1,6 +1,6 @@
 <?php
 require 'includes/auth.php';
-require 'config/db.php';
+require_once 'config/db.php';
 
 $building = trim($_GET['building'] ?? '');
 if (empty($building)) {

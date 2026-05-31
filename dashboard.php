@@ -1,6 +1,6 @@
 <?php
 require 'includes/auth.php';
-require 'config/db.php';
+require_once 'config/db.php';
 require 'includes/functions.php';
 
 $page_title = 'Dashboard';
@@ -10,9 +10,9 @@ $user_id    = $_SESSION['user_id'];
 $stmt = $conn->prepare('
     SELECT
         COUNT(*) AS total,
-        SUM(status = "Pending")     AS pending,
-        SUM(status = "In Progress") AS in_progress,
-        SUM(status = "Completed")   AS completed
+        SUM(`status` = "Pending")     AS pending,
+        SUM(`status` = "In Progress") AS in_progress,
+        SUM(`status` = "Completed")   AS completed
     FROM requests
     WHERE user_id = ?
 ');
