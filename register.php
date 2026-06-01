@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($full_name) || empty($email) || empty($password) || empty($confirm_password)) {
         $error = 'Please fill in all required fields.';
-    } elseif (!str_ends_with($email, '@aum.edu')) {
-        $error = 'Only AUM email addresses (@aum.edu) are accepted.';
+    } elseif (!str_contains(strtolower($email), 'aum')) {
+        $error = 'Email must contain "aum" (e.g. student@aum.edu.jo).';
     } elseif (strlen($password) < 6) {
         $error = 'Password must be at least 6 characters long.';
     } elseif ($password !== $confirm_password) {
@@ -108,11 +108,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                             <input type="email" name="email" class="form-control"
-                                   placeholder="student@aum.edu"
+                                   placeholder="student@aum.edu.jo"
                                    value="<?= htmlspecialchars($data['email']) ?>"
                                    autocomplete="email" required>
                         </div>
-                        <div class="form-text">Only @aum.edu email addresses are accepted.</div>
+                        <div class="form-text">Must be an AUM email (must contain "aum").</div>
                     </div>
 
                     <div class="mb-3">
