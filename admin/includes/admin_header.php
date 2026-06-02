@@ -11,6 +11,14 @@ $page_title = $page_title ?? 'Admin Panel';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="assets/css/admin.css" rel="stylesheet">
+    <style>
+        @media print {
+            .admin-sidebar, .admin-topbar, .btn, form { display: none !important; }
+            .admin-main { margin-left: 0 !important; }
+            .admin-content { padding: 0 !important; }
+            .card { box-shadow: none !important; border: 1px solid #ddd !important; }
+        }
+    </style>
 </head>
 <body>
 

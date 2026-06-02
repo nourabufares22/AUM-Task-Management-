@@ -1,12 +1,10 @@
 <?php
 session_start();
-if (isset($_SESSION['user_id'])) {
-    header('Location: dashboard.php');
-    exit;
-}
 require 'config/db.php';
 
-$error = '';
+$error           = '';
+$already_in      = isset($_SESSION['user_id']);
+$already_in_name = $_SESSION['user_name'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email    = trim($_POST['email'] ?? '');
@@ -56,6 +54,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="card auth-card">
+                <?php if ($already_in): ?>
+                    <div class="alert alert-warning d-flex align-items-center gap-2 py-2 mb-3">
+                        <i class="bi bi-person-check-fill flex-shrink-0"></i>
+                        <div class="small">
+                            Logged in as <strong><?= htmlspecialchars($already_in_name) ?></strong>.
+                            <a href="dashboard.php" class="alert-link ms-1">Go to dashboard</a>
+                            or sign in below to switch accounts.
+                        </div>
+                    </div>
+                <?php endif; ?>
                 <?php if ($error): ?>
                     <div class="alert alert-danger d-flex align-items-center gap-2 py-2 mb-3">
                         <i class="bi bi-exclamation-circle-fill"></i>

@@ -36,6 +36,24 @@ $bld_result = $conn->query("
 require 'includes/admin_header.php';
 ?>
 
+<!-- Export Bar -->
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+    <div>
+        <h6 class="fw-bold mb-0" style="color:#970000;">
+            <i class="bi bi-bar-chart-line me-2"></i>System Reports
+        </h6>
+        <small class="text-muted">Overview of all maintenance requests</small>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="export_csv.php" class="btn btn-success btn-sm px-3">
+            <i class="bi bi-file-earmark-spreadsheet me-1"></i>Export Excel / CSV
+        </a>
+        <button onclick="window.print()" class="btn btn-outline-secondary btn-sm px-3">
+            <i class="bi bi-printer me-1"></i>Print / PDF
+        </button>
+    </div>
+</div>
+
 <!-- Summary Cards -->
 <div class="row g-3 mb-4">
     <?php

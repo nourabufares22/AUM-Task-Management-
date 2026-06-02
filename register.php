@@ -22,8 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please fill in all required fields.';
     } elseif (!str_contains(strtolower($email), 'aum')) {
         $error = 'Email must contain "aum" (e.g. student@aum.edu.jo).';
-    } elseif (strlen($password) < 6) {
-        $error = 'Password must be at least 6 characters long.';
+    } elseif (strlen($password) < 8) {
+        $error = 'Password must be at least 8 characters.';
+    } elseif (!preg_match('/[A-Z]/', $password)) {
+        $error = 'Password must include at least one uppercase letter.';
+    } elseif (!preg_match('/[0-9]/', $password)) {
+        $error = 'Password must include at least one number.';
+    } elseif (!preg_match('/[^A-Za-z0-9]/', $password)) {
+        $error = 'Password must include at least one special character (e.g. !@#$%).';
     } elseif ($password !== $confirm_password) {
         $error = 'Passwords do not match.';
     } else {
@@ -120,13 +126,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-lock"></i></span>
                             <input type="password" name="password" id="pw1"
-                                   class="form-control" placeholder="Min. 6 characters"
-                                   autocomplete="new-password" required>
+                                   class="form-control" placeholder="Min. 8 characters"
+                                   autocomplete="new-password" oninput="checkStrength(this.value)"
+                                   required>
                             <button type="button" class="btn btn-outline-secondary"
                                     onclick="togglePw('pw1','eye1')">
                                 <i class="bi bi-eye" id="eye1"></i>
                             </button>
                         </div>
+                        <!-- Strength bar -->
+                        <div class="mt-2">
+                            <div class="d-flex gap-1 mb-1">
+                                <div class="strength-seg flex-fill rounded" id="seg1" style="height:4px;background:#ddd;transition:background .25s;"></div>
+                                <div class="strength-seg flex-fill rounded" id="seg2" style="height:4px;background:#ddd;transition:background .25s;"></div>
+                                <div class="strength-seg flex-fill rounded" id="seg3" style="height:4px;background:#ddd;transition:background .25s;"></div>
+                                <div class="strength-seg flex-fill rounded" id="seg4" style="height:4px;background:#ddd;transition:background .25s;"></div>
+                            </div>
+                            <div id="strengthLabel" class="form-text" style="font-size:0.75rem;"></div>
+                        </div>
+                        <!-- Requirements checklist -->
+                        <ul class="list-unstyled mt-2 mb-0" style="font-size:0.75rem;">
+                            <li id="req-len"  class="text-muted"><i class="bi bi-x-circle me-1"></i>At least 8 characters</li>
+                            <li id="req-up"   class="text-muted"><i class="bi bi-x-circle me-1"></i>At least one uppercase letter</li>
+                            <li id="req-num"  class="text-muted"><i class="bi bi-x-circle me-1"></i>At least one number</li>
+                            <li id="req-spec" class="text-muted"><i class="bi bi-x-circle me-1"></i>At least one special character (!@#$%…)</li>
+                        </ul>
                     </div>
 
                     <div class="mb-4">
@@ -166,6 +190,39 @@ function togglePw(inputId, iconId) {
     const icon  = document.getElementById(iconId);
     input.type = input.type === 'password' ? 'text' : 'password';
     icon.className = input.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
+}
+
+function checkStrength(pw) {
+    const hasLen  = pw.length >= 8;
+    const hasUp   = /[A-Z]/.test(pw);
+    const hasNum  = /[0-9]/.test(pw);
+    const hasSpec = /[^A-Za-z0-9]/.test(pw);
+
+    // Update checklist
+    setReq('req-len',  hasLen);
+    setReq('req-up',   hasUp);
+    setReq('req-num',  hasNum);
+    setReq('req-spec', hasSpec);
+
+    // Score 0-4
+    const score = [hasLen, hasUp, hasNum, hasSpec].filter(Boolean).length;
+
+    const colors = ['', '#ef4444', '#f59e0b', '#3b82f6', '#22c55e'];
+    const labels = ['', '<span style="color:#ef4444">Weak</span>',
+                        '<span style="color:#f59e0b">Fair</span>',
+                        '<span style="color:#3b82f6">Good</span>',
+                        '<span style="color:#22c55e">Strong</span>'];
+
+    for (let i = 1; i <= 4; i++) {
+        document.getElementById('seg' + i).style.background = i <= score ? colors[score] : '#ddd';
+    }
+    document.getElementById('strengthLabel').innerHTML = pw.length ? 'Strength: ' + labels[score] : '';
+}
+
+function setReq(id, met) {
+    const el = document.getElementById(id);
+    el.className = met ? 'text-success' : 'text-muted';
+    el.querySelector('i').className = met ? 'bi bi-check-circle-fill me-1' : 'bi bi-x-circle me-1';
 }
 </script>
 </body>
