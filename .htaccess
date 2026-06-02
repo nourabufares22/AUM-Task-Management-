@@ -1,0 +1,7 @@
+Options -Indexes
+DirectoryIndex login.php index.php
+
+<FilesMatch "\.(env|sql|json|toml|md)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
