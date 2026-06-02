@@ -1,0 +1,8 @@
+{
+    "name": "your-app/name",
+    "description": "AUM Task System",
+    "type": "project",
+    "require": {
+        "php": ">=8.0"
+    }
+}
