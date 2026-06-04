@@ -1,14 +1,11 @@
-FROM php:8.2-apache
+FROM php:8.2-cli
 
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-RUN a2dismod mpm_event && a2enmod mpm_prefork
+COPY . /app
 
-RUN sed -i 's/80/${PORT}/g' /etc/apache2/ports.conf && \
-    sed -i 's/80/${PORT}/g' /etc/apache2/sites-enabled/000-default.conf
+WORKDIR /app
 
-COPY . /var/www/html/
+EXPOSE 8080
 
-RUN chown -R www-data:www-data /var/www/html/
-
-EXPOSE 80
+CMD php -S 0.0.0.0:${PORT:-8080}
