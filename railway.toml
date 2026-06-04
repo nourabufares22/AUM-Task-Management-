@@ -1,5 +1,2 @@
 [build]
-builder = "railpack"
-
-[deploy]
-startCommand = "php -S 0.0.0.0:$PORT"
+builder = "dockerfile"
