@@ -1,8 +1,10 @@
 {
-    "name": "your-app/name",
-    "description": "AUM Task System",
+    "name": "aum/task-management",
+    "description": "AUM Task Management System",
     "type": "project",
     "require": {
-        "php": ">=8.0"
+        "php": ">=8.0",
+        "ext-mysqli": "*",
+        "ext-pdo_mysql": "*"
     }
 }
