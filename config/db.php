@@ -1,36 +1,35 @@
 <?php
-// Railway exposes a full connection URL — try it first
-$url = getenv('MYSQL_URL')
-    ?: getenv('DATABASE_URL')
-    ?: getenv('MYSQL_PRIVATE_URL')
-    ?: '';
+// Individual Railway variables — try these first
+$host = getenv('MYSQLHOST')     ?: getenv('MYSQL_HOST')     ?: '';
+$port = (int)(getenv('MYSQLPORT')    ?: getenv('MYSQL_PORT')     ?: 3306);
+$user = getenv('MYSQLUSER')     ?: getenv('MYSQL_USER')     ?: 'root';
+$pass = getenv('MYSQLPASSWORD') ?: getenv('MYSQL_PASSWORD') ?: '';
+$db   = getenv('MYSQLDATABASE') ?: getenv('MYSQL_DATABASE') ?: '';
 
-if ($url) {
-    $p    = parse_url($url);
-    $host = $p['host']                          ?? '127.0.0.1';
-    $port = (int)($p['port']                    ?? 3306);
-    $user = isset($p['user']) ? urldecode($p['user']) : 'root';
-    $pass = isset($p['pass']) ? urldecode($p['pass']) : '';
-    $db   = ltrim($p['path'] ?? 'aum_task_system', '/');
-} else {
-    // Fall back to individual Railway variables
-    $host = getenv('MYSQLHOST')     ?: getenv('MYSQL_HOST')      ?: '127.0.0.1';
-    $port = (int)(getenv('MYSQLPORT')    ?: getenv('MYSQL_PORT')      ?: 3306);
-    $user = getenv('MYSQLUSER')     ?: getenv('MYSQL_USER')      ?: 'root';
-    $pass = getenv('MYSQLPASSWORD') ?: getenv('MYSQL_PASSWORD')  ?: '';
-    $db   = getenv('MYSQLDATABASE') ?: getenv('MYSQL_DATABASE')  ?: 'aum_task_system';
+// If host not found, fall back to parsing the connection URL
+if (!$host) {
+    $url = getenv('MYSQL_URL') ?: getenv('DATABASE_URL') ?: getenv('MYSQL_PRIVATE_URL') ?: '';
+    if ($url) {
+        $p    = parse_url($url);
+        $host = $p['host']  ?? '';
+        $port = (int)($p['port'] ?? 3306);
+        $user = isset($p['user']) ? urldecode($p['user']) : 'root';
+        $pass = isset($p['pass']) ? urldecode($p['pass']) : '';
+        $db   = ltrim($p['path'] ?? '', '/');
+    }
 }
+
+// Local fallback
+if (!$host) $host = '127.0.0.1';
+if (!$db)   $db   = 'aum_task_system';
 
 $conn = new mysqli($host, $user, $pass, $db, $port);
 
 if ($conn->connect_error) {
-    $is_local = ($_SERVER['REMOTE_ADDR'] ?? '') === '127.0.0.1'
-             || str_contains($_SERVER['HTTP_HOST'] ?? '', 'localhost');
     die('<div style="font-family:sans-serif;padding:30px;color:#970000;text-align:center;">
         <h3>Database Connection Failed</h3>
-        <p>' . htmlspecialchars($conn->connect_error) . '</p>'
-        . ($is_local ? '<p>Host: ' . htmlspecialchars($host) . ' | Port: ' . $port . ' | DB: ' . htmlspecialchars($db) . '</p>' : '')
-        . '<p>If deploying on Railway, make sure your MySQL service variables are linked to this service.</p>
+        <p>' . htmlspecialchars($conn->connect_error) . '</p>
+        <p>Host: ' . htmlspecialchars($host) . ' | DB: ' . htmlspecialchars($db) . '</p>
     </div>');
 }
 
