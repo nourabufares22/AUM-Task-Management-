@@ -1,27 +1,22 @@
 <?php
-// Individual Railway variables — try these first
-$host = getenv('MYSQLHOST')     ?: getenv('MYSQL_HOST')     ?: '';
-$port = (int)(getenv('MYSQLPORT')    ?: getenv('MYSQL_PORT')     ?: 3306);
-$user = getenv('MYSQLUSER')     ?: getenv('MYSQL_USER')     ?: 'root';
-$pass = getenv('MYSQLPASSWORD') ?: getenv('MYSQL_PASSWORD') ?: '';
-$db   = getenv('MYSQLDATABASE') ?: getenv('MYSQL_DATABASE') ?: '';
+// Railway provides MYSQL_URL with full connection details
+$url = getenv('MYSQL_URL') ?: getenv('DATABASE_URL') ?: '';
 
-// If host not found, fall back to parsing the connection URL
-if (!$host) {
-    $url = getenv('MYSQL_URL') ?: getenv('DATABASE_URL') ?: getenv('MYSQL_PRIVATE_URL') ?: '';
-    if ($url) {
-        $p    = parse_url($url);
-        $host = $p['host']  ?? '';
-        $port = (int)($p['port'] ?? 3306);
-        $user = isset($p['user']) ? urldecode($p['user']) : 'root';
-        $pass = isset($p['pass']) ? urldecode($p['pass']) : '';
-        $db   = ltrim($p['path'] ?? '', '/');
-    }
+if ($url) {
+    $p    = parse_url($url);
+    $host = $p['host']                              ?? '127.0.0.1';
+    $port = (int)($p['port']                        ?? 3306);
+    $user = isset($p['user']) ? urldecode($p['user']) : 'root';
+    $pass = isset($p['pass']) ? urldecode($p['pass']) : '';
+    $db   = ltrim($p['path']                        ?? 'aum_task_system', '/');
+} else {
+    // Local XAMPP fallback
+    $host = '127.0.0.1';
+    $port = 3306;
+    $user = 'root';
+    $pass = '';
+    $db   = 'aum_task_system';
 }
-
-// Local fallback
-if (!$host) $host = '127.0.0.1';
-if (!$db)   $db   = 'aum_task_system';
 
 $conn = new mysqli($host, $user, $pass, $db, $port);
 
