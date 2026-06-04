@@ -1,14 +1,13 @@
 <?php
-// Railway provides MYSQL_URL with full connection details
 $url = getenv('MYSQL_URL') ?: getenv('DATABASE_URL') ?: '';
 
-if ($url) {
-    $p    = parse_url($url);
-    $host = $p['host']                              ?? '127.0.0.1';
-    $port = (int)($p['port']                        ?? 3306);
-    $user = isset($p['user']) ? urldecode($p['user']) : 'root';
-    $pass = isset($p['pass']) ? urldecode($p['pass']) : '';
-    $db   = ltrim($p['path']                        ?? 'aum_task_system', '/');
+if ($url && preg_match('#mysql://([^:]+):([^@]*)@([^:/]+):?(\d*)/([^?\s]+)#', $url, $m)) {
+    // Regex finds mysql:// even if something is prepended (e.g. "railwaymysql://")
+    $user = urldecode($m[1]);
+    $pass = urldecode($m[2]);
+    $host = $m[3];
+    $port = (int)($m[4] ?: 3306);
+    $db   = $m[5];
 } else {
     // Local XAMPP fallback
     $host = '127.0.0.1';
