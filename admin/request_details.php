@@ -64,10 +64,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 require 'includes/admin_header.php';
 ?>
 
-<div class="mb-3">
+<div class="mb-3 d-flex align-items-center justify-content-between">
     <a href="manage_requests.php" class="btn btn-outline-secondary btn-sm">
         <i class="bi bi-arrow-left me-1"></i>Back to Requests
     </a>
+    <button type="button" class="btn btn-danger btn-sm px-3"
+            onclick="document.getElementById('deleteModal').querySelector('.modal').dispatchEvent(new Event('x'))"
+            data-bs-toggle="modal" data-bs-target="#deleteModal">
+        <i class="bi bi-trash me-1"></i>Delete Request
+    </button>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-0 pb-0">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                         style="width:40px;height:40px;background:#fff0f0;">
+                        <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                    </div>
+                    <h6 class="modal-title fw-bold mb-0">Delete Request</h6>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pt-2">
+                <p class="text-muted mb-1">You are about to permanently delete:</p>
+                <p class="fw-semibold mb-0" style="color:#970000;">
+                    <?= htmlspecialchars($req['request_title']) ?>
+                </p>
+                <p class="text-muted small mt-2 mb-0">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    This action cannot be undone.
+                </p>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary px-4"
+                        data-bs-dismiss="modal">Cancel</button>
+                <form method="POST" action="delete_request.php" class="d-inline">
+                    <input type="hidden" name="id" value="<?= $req['id'] ?>">
+                    <button type="submit" class="btn btn-danger px-4">
+                        <i class="bi bi-trash me-1"></i>Delete Permanently
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?php if ($success_msg): ?>

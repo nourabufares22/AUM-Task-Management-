@@ -153,10 +153,17 @@ require 'includes/admin_header.php';
                                 <td><?= status_badge($r['status']) ?></td>
                                 <td class="text-muted small"><?= date('d M Y', strtotime($r['created_at'])) ?></td>
                                 <td class="pe-4 text-center">
-                                    <a href="request_details.php?id=<?= $r['id'] ?>"
-                                       class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-eye me-1"></i>View
-                                    </a>
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        <a href="request_details.php?id=<?= $r['id'] ?>"
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye me-1"></i>View
+                                        </a>
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                onclick="confirmDelete(<?= $r['id'] ?>, '<?= htmlspecialchars(addslashes($r['request_title'])) ?>')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
@@ -166,5 +173,63 @@ require 'includes/admin_header.php';
         <?php endif; ?>
     </div>
 </div>
+
+<?php if (isset($_GET['deleted'])): ?>
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index:9999">
+        <div class="toast show align-items-center text-bg-success border-0 shadow" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-check-circle me-2"></i>Request deleted successfully.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-0 pb-0">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center"
+                         style="width:40px;height:40px;background:#fff0f0;">
+                        <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                    </div>
+                    <h6 class="modal-title fw-bold mb-0">Delete Request</h6>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pt-2">
+                <p class="text-muted mb-1">You are about to permanently delete:</p>
+                <p class="fw-semibold mb-0" id="deleteTitle" style="color:#970000;"></p>
+                <p class="text-muted small mt-2 mb-0">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    This action cannot be undone.
+                </p>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-outline-secondary px-4"
+                        data-bs-dismiss="modal">Cancel</button>
+                <form method="POST" action="delete_request.php" class="d-inline">
+                    <input type="hidden" name="id" id="deleteId">
+                    <button type="submit" class="btn btn-danger px-4">
+                        <i class="bi bi-trash me-1"></i>Delete Permanently
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(id, title) {
+    document.getElementById('deleteId').value    = id;
+    document.getElementById('deleteTitle').textContent = title;
+    new bootstrap.Modal(document.getElementById('deleteModal')).show();
+}
+</script>
 
 <?php require 'includes/admin_footer.php'; ?>
